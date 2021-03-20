@@ -4,8 +4,8 @@ let oldNamesOnHelpList = [];
 rowCount = 0;
 
 // Just makes the button pretty without needing a CSS-file
-let style = document.createElement('style');
-style.innerHTML = '.myButton {\n' +
+let styleName = document.createElement('style');
+styleName.innerHTML = '.nameButton {\n' +
     '\tbox-shadow:inset 0px 1px 0px 0px #97c4fe;\n' +
     '\tbackground:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);\n' +
     '\tbackground-color:#3d94f6;\n' +
@@ -21,15 +21,41 @@ style.innerHTML = '.myButton {\n' +
     '\ttext-decoration:none;\n' +
     '\ttext-shadow:0px 1px 0px #1570cd;\n' +
     '}\n' +
-    '.myButton:hover {\n' +
+    '.nameButton:hover {\n' +
     '\tbackground:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);\n' +
     '\tbackground-color:#1e62d0;\n' +
     '}\n' +
-    '.myButton:active {\n' +
+    '.nameButton:active {\n' +
+    '\tposition:relative;\n' +
+    '\ttop:1px;\n';
+document.getElementsByTagName('head')[0].appendChild(styleName);
+
+let styleZoom = document.createElement('style');
+styleZoom.innerHTML = '.zoomButton {\n' +
+    '\tbox-shadow:inset 0px 1px 0px 0px #bbdaf7;\n' +
+    '\tbackground:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);\n' +
+    '\tbackground-color:#79bbff;\n' +
+    '\tborder-radius:6px;\n' +
+    '\tborder:1px solid #84bbf3;\n' +
+    '\tdisplay:inline-block;\n' +
+    '\tcursor:pointer;\n' +
+    '\tcolor:#ffffff;\n' +
+    '\tfont-family:Arial;\n' +
+    '\tfont-size:15px;\n' +
+    '\tfont-weight:bold;\n' +
+    '\tpadding:6px 24px;\n' +
+    '\ttext-decoration:none;\n' +
+    '\ttext-shadow:0px 1px 0px #528ecc;\n' +
+    '}\n' +
+    '.zoomButton:hover {\n' +
+    '\tbackground:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);\n' +
+    '\tbackground-color:#378de5;\n' +
+    '}\n' +
+    '.zoomButton:active {\n' +
     '\tposition:relative;\n' +
     '\ttop:1px;\n' +
-    '}\n';
-document.getElementsByTagName('head')[0].appendChild(style);
+    '}';
+document.getElementsByTagName('head')[0].appendChild(styleZoom);
 
 //Find the help-list element to add an observer later
 let targetElement = document.getElementById("manageHelpListForm");
@@ -78,15 +104,41 @@ function onWaglysUpdate() {
 function generateButton(buttonInformation) {
     let divElement = document.createElement("div");
 
-    let btn = document.createElement("BUTTON");
-    btn.innerHTML = "Copy: " + buttonInformation;
-    btn.setAttribute("type", "button");
-    btn.addEventListener("click", () => setClipboard(buttonInformation));
-    btn.className = 'myButton';
+    let namebtn = document.createElement("BUTTON");
+    namebtn.innerHTML = "Copy: " + buttonInformation;
+    namebtn.setAttribute("type", "button");
+    namebtn.addEventListener("click", () => setClipboard(buttonInformation));
+    namebtn.className = 'nameButton';
 
-    divElement.appendChild(btn);
+    let zoombtn = document.createElement("BUTTON");
+    zoombtn.innerHTML = "Zoom: " + buttonInformation;
+    zoombtn.setAttribute("type", "button");
+    zoombtn.addEventListener("click", () => connectToZoom(buttonInformation));
+    zoombtn.className = 'zoomButton';
+
+    divElement.appendChild(namebtn);
+    divElement.appendChild(zoombtn);
     divElement.setAttribute("align", "center");
     return divElement;
+}
+
+//Button function to attempt to parse name and join a Zoom call
+function connectToZoom(text) {
+    let id, pass;
+    //Parse attemp #1: Only zoom id, no password
+    if (text.replace(/ /g, "").length < 12) {
+        id = text.replace(/ /g, "");
+        pass = "";
+    }
+    // Parse attempt #2: Zoom id & password separated by '-'
+    else if (text.contains("-")){
+        text = text.replace(/ /g, ""); //Removes all white-spaces
+        let index = text.indexOf("-");
+        id = text.substring(0, index);
+        pass = text.substring(index + 1, text.length);
+    }
+
+    let newTab = window.open(`https://zoom.us/j/${id}?pwd=${pass}`);
 }
 
 // Function for writing text to the clipboard.
@@ -110,10 +162,10 @@ function setClipboard(text) {
 
 // Checks if the list of new names has added any new names which aren't included in the old one.
 // I.e. checks if the list of names has been updated
-function newDifferentFromOld(oldNames, newNames){
+function newDifferentFromOld(oldNames, newNames) {
     if (newNames.length > oldNames.length) return true;
-    for(let elem of newNames){
-        if(!oldNames.includes(elem)){
+    for (let elem of newNames) {
+        if (!oldNames.includes(elem)) {
             return true;
         }
     }
