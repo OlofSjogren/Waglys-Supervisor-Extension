@@ -131,7 +131,7 @@ function connectToZoom(text) {
         pass = "";
     }
     // Parse attempt #2: Zoom id & password separated by '-'
-    else if (text.contains("-")){
+    else if (text.includes("-")){
         text = text.replace(/ /g, ""); //Removes all white-spaces
         let index = text.indexOf("-");
         id = text.substring(0, index);
