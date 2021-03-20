@@ -1,4 +1,6 @@
 const audio = new Audio('http://soundbible.com/mp3/service-bell_daniel_simion.mp3');
+let oldNamesOnHelpList = [];
+
 rowCount = 0;
 
 // Just makes the button pretty without needing a CSS-file
@@ -31,7 +33,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 
 //Find the help-list element to add an observer later
 let targetElement = document.getElementById("manageHelpListForm");
-const config = { attributes: false, childList: true, subtree: true };
+const config = {attributes: false, childList: true, subtree: true};
 
 // Create an observer instance linked to the onWaglysUpdate function.
 const observer = new MutationObserver(onWaglysUpdate);
@@ -46,39 +48,42 @@ onWaglysUpdate()
 
 // On each update Waglys re-renders the list, thus removing all the injected buttons.
 // This function is called upon every time Waglys re-renders the list to inject buttons for every list-item.
-function onWaglysUpdate(){
-    console.log("DISCONNECTED OBSERVER");
+function onWaglysUpdate() {
     observer.disconnect();
+    console.log("DISCONNECT OBSERVER")
 
+    let newNamesOnHelpList = [];
+
+    //NOTE: getElementsByClassName will return an array with items
     let helpRequestList = document.getElementsByClassName("ui-li ui-li-static ui-btn-up-a");
-    for (const child of helpRequestList ) {
-        let helpRequestItem = child.getElementsByClassName("ui-widget-content");
-        let zoomText = child.getElementsByClassName("ui-btn-text");
-        zoomText = zoomText[0].innerHTML;
-        helpRequestItem[0].parentNode.insertBefore(generateButton(zoomText), helpRequestItem[0]);
-        console.log("GENERATED BUTTON");
+    for (const child of helpRequestList) {
+        let helpRequestItem = child.getElementsByClassName("ui-widget-content")[0];
+        let zoomText = child.getElementsByClassName("ui-btn-text")[0].innerHTML;
+        helpRequestItem.parentNode.insertBefore(generateButton(zoomText), helpRequestItem);
+        newNamesOnHelpList.push(zoomText);
     }
 
-    //Audio notification for newly appeared rows (ALL CREDIT TO ELIAS FOR THIS ONE)
-    newRowCount = document.querySelectorAll('*[role^=row]').length;
-    if(newRowCount > rowCount){
+    //Play audio if a the list of new names has any new names that the old one does not.
+    if (newDifferentFromOld(oldNamesOnHelpList, newNamesOnHelpList)) {
         audio.play();
+        console.log("AUDIO SHOULD PLAY");
     }
-    rowCount = newRowCount;
-
+    oldNamesOnHelpList = newNamesOnHelpList;
 
     observer.observe(targetElement, config);
-    console.log("RECONNECTED OBSERVER");
+    console.log("CONNECT OBSERVER")
 }
 
 // Generates a div with a styled button containing the
-function generateButton(buttonInformation){
+function generateButton(buttonInformation) {
     let divElement = document.createElement("div");
+
     let btn = document.createElement("BUTTON");
     btn.innerHTML = "Copy: " + buttonInformation;
     btn.setAttribute("type", "button");
-    btn.addEventListener ("click", () => setClipboard(buttonInformation));
+    btn.addEventListener("click", () => setClipboard(buttonInformation));
     btn.className = 'myButton';
+
     divElement.appendChild(btn);
     divElement.setAttribute("align", "center");
     return divElement;
@@ -101,5 +106,16 @@ function setClipboard(text) {
     } catch (err) {
         console.log('Oops, unable to copy');
     }
+}
 
+// Checks if the list of new names has added any new names which aren't included in the old one.
+// I.e. checks if the list of names has been updated
+function newDifferentFromOld(oldNames, newNames){
+    if (newNames.length > oldNames.length) return true;
+    for(let elem of newNames){
+        if(!oldNames.includes(elem)){
+            return true;
+        }
+    }
+    return false;
 }
