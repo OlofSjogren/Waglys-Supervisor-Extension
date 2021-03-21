@@ -142,7 +142,7 @@ function connectToZoom(text) {
         pass = text.replace(id, "");;
     }
 
-    window.open(`https://zoom.us/j/${id}?pwd=${pass}`);
+    window.open(`https://zoom.us/j/${id}?pwd=${pass}`, "zoomWindow");
 }
 
 // Function for writing text to the clipboard.
