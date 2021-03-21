@@ -1,9 +1,8 @@
 const audio = new Audio('http://soundbible.com/mp3/service-bell_daniel_simion.mp3');
 let oldNamesOnHelpList = [];
 
-rowCount = 0;
-
 // Just makes the button pretty without needing a CSS-file
+// Button credit: https://www.bestcssbuttongenerator.com/
 let styleName = document.createElement('style');
 styleName.innerHTML = '.nameButton {\n' +
     '\tbox-shadow:inset 0px 1px 0px 0px #97c4fe;\n' +
@@ -29,7 +28,6 @@ styleName.innerHTML = '.nameButton {\n' +
     '\tposition:relative;\n' +
     '\ttop:1px;\n';
 document.getElementsByTagName('head')[0].appendChild(styleName);
-
 let styleZoom = document.createElement('style');
 styleZoom.innerHTML = '.zoomButton {\n' +
     '\tbox-shadow:inset 0px 1px 0px 0px #bbdaf7;\n' +
@@ -76,11 +74,11 @@ onWaglysUpdate()
 // This function is called upon every time Waglys re-renders the list to inject buttons for every list-item.
 function onWaglysUpdate() {
     observer.disconnect();
-    console.log("DISCONNECT OBSERVER")
+    //console.log("DISCONNECT OBSERVER")
 
     let newNamesOnHelpList = [];
 
-    //NOTE: getElementsByClassName will return an array with items
+    //NOTE: getElementsByClassName will return an array with items, in this case it will only contain 1 item
     let helpRequestList = document.getElementsByClassName("ui-li ui-li-static ui-btn-up-a");
     for (const child of helpRequestList) {
         let helpRequestItem = child.getElementsByClassName("ui-widget-content")[0];
@@ -92,15 +90,15 @@ function onWaglysUpdate() {
     //Play audio if a the list of new names has any new names that the old one does not.
     if (newDifferentFromOld(oldNamesOnHelpList, newNamesOnHelpList)) {
         audio.play();
-        console.log("AUDIO SHOULD PLAY");
+        //console.log("AUDIO SHOULD PLAY");
     }
     oldNamesOnHelpList = newNamesOnHelpList;
 
     observer.observe(targetElement, config);
-    console.log("CONNECT OBSERVER")
+    //console.log("CONNECT OBSERVER")
 }
 
-// Generates a div with a styled button containing the
+// Generates a div containing the name-button and zoom-button
 function generateButton(buttonInformation) {
     let divElement = document.createElement("div");
 
@@ -125,20 +123,26 @@ function generateButton(buttonInformation) {
 //Button function to attempt to parse name and join a Zoom call
 function connectToZoom(text) {
     let id, pass;
-    //Parse attemp #1: Only zoom id, no password
+    //Parse attempt #1: Only zoom id, no password
     if (text.replace(/ /g, "").length < 12) {
         id = text.replace(/ /g, "");
         pass = "";
     }
-    // Parse attempt #2: Zoom id & password separated by '-'
-    else if (text.includes("-")){
+    // Parse attempt #2: Zoom id & password separated by a symbol.
+    else if ((/[-+:;_.,|/]/g).test(text)){
         text = text.replace(/ /g, ""); //Removes all white-spaces
-        let index = text.indexOf("-");
+        let index = text.search(/[-+:;_.,|/]/g);
         id = text.substring(0, index);
         pass = text.substring(index + 1, text.length);
     }
+    // Last parse attempt #3: First 10 chars: Zoom id, anything after: password
+    else {
+        text = text.replace(/ /g, ""); //Removes all white-spaces
+        id = text.match(/[0-9]{10}/g);
+        pass = text.replace(id, "");;
+    }
 
-    let newTab = window.open(`https://zoom.us/j/${id}?pwd=${pass}`);
+    window.open(`https://zoom.us/j/${id}?pwd=${pass}`);
 }
 
 // Function for writing text to the clipboard.
