@@ -124,7 +124,7 @@ function generateButton(buttonInformation) {
 function connectToZoom(text) {
     let id, pass;
     //Parse attempt #1: Only zoom id, no password
-    if (text.replace(/ /g, "").length < 12) {
+    if (text.replace(/ /g, "").length <= 12) {
         id = text.replace(/ /g, "");
         pass = "";
     }
@@ -135,11 +135,17 @@ function connectToZoom(text) {
         id = text.substring(0, index);
         pass = text.substring(index + 1, text.length);
     }
-    // Last parse attempt #3: First 10 chars: Zoom id, anything after: password
-    else {
+    // Parse attempt #3: First 11 decimals: Zoom id, anything after: password
+    else if ((/[0-9]{11}/g).test(text)){
+        text = text.replace(/ /g, ""); //Removes all white-spaces
+        id = text.match(/[0-9]{11}/g);
+        pass = text.replace(id, "");
+    }
+    // Last parse attempt #4: First 10 decimals: Zoom id, anything after: password
+    else if ((/[0-9]{10}/g).test(text)){
         text = text.replace(/ /g, ""); //Removes all white-spaces
         id = text.match(/[0-9]{10}/g);
-        pass = text.replace(id, "");;
+        pass = text.replace(id, "");
     }
 
     window.open(`https://zoom.us/j/${id}?pwd=${pass}`, "zoomWindow");
