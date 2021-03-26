@@ -1,4 +1,5 @@
 const audio = new Audio('http://soundbible.com/mp3/service-bell_daniel_simion.mp3');
+const copyTextarea = document.createElement("textarea");
 let oldNamesOnHelpList = [];
 
 // Just makes the button pretty without needing a CSS-file
@@ -124,7 +125,7 @@ function generateButton(buttonInformation) {
 function connectToZoom(text) {
     let id, pass;
     //Parse attempt #1: Only zoom id, no password
-    if (text.replace(/ /g, "").length <= 12) {
+    if (text.replace(/ /g, "").length < 12) {
         id = text.replace(/ /g, "");
         pass = "";
     }
@@ -148,6 +149,7 @@ function connectToZoom(text) {
         pass = text.replace(id, "");
     }
 
+    setClipboard(pass);
     window.open(`https://zoom.us/j/${id}?pwd=${pass}`, "zoomWindow");
 }
 
@@ -155,7 +157,6 @@ function connectToZoom(text) {
 // Creates a temporary textarea with the text, focuses as well as selects it and then copies to clipboard.
 // This method is used since any newer API requires https which does not seem to work on Waglys.
 function setClipboard(text) {
-    let copyTextarea = document.createElement("textarea");
     copyTextarea.value = text;
     document.body.appendChild(copyTextarea);
     copyTextarea.focus();
