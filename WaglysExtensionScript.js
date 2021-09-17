@@ -124,7 +124,7 @@ function generateButton(buttonInformation) {
     const {id, pass} = parseIdAndPass(buttonInformation);
     let tooltipPasswordP = document.createElement("p");
     let tooltipIdP = document.createElement("p");
-    tooltipPasswordP.innerHTML = `Id: \"${id}\"`;
+    tooltipPasswordP.innerHTML = `MeetingId: \"${id}\"`;
     tooltipIdP.innerHTML = `Password: \"${pass}\"`;
     tooltipSpan.className = 'tooltiptext';
     
@@ -167,8 +167,8 @@ function parseIdAndPass(text) {
     }
 
     return {
-        id,
-        pass
+        id: id ?? "",
+        pass: pass ?? ""
     }
 }
 
