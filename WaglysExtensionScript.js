@@ -56,9 +56,13 @@ styleZoom.innerHTML = '.zoomButton {\n' +
     '}';
 document.getElementsByTagName('head')[0].appendChild(styleZoom);
 
+let styleTooltip = document.createElement('style');
+styleTooltip.innerHTML = '.tooltip {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-bottom: 1px dotted black;\r\n}\r\n\r\n.tooltip .tooltiptext {\r\n  visibility: hidden;\r\n background-color: rgba(0, 0, 0, .6);\r\n color: #fff;\r\n  text-align: center;\r\n  border-radius: 6px;\r\n  padding: 10px;\r\n\r\n  \/* Position the tooltip *\/\r\n  position: absolute;\r\n  z-index: 1;\r\n top: -5px;\r\n left: 105%;\r\n}\r\n\r\n.tooltip:hover .tooltiptext {\r\n  visibility: visible;\r\n}';
+document.getElementsByTagName('head')[0].appendChild(styleTooltip);
+
 //Find the help-list element to add an observer later
 let targetElement = document.getElementById("manageHelpListForm");
-const config = {attributes: false, childList: true, subtree: true};
+const config = { attributes: false, childList: true, subtree: true };
 
 // Create an observer instance linked to the onWaglysUpdate function.
 const observer = new MutationObserver(onWaglysUpdate);
@@ -99,7 +103,8 @@ function onWaglysUpdate() {
     //console.log("CONNECT OBSERVER")
 }
 
-// Generates a div containing the name-button and zoom-button
+// Generates a div containing the name-button and zoom-button.
+// Also adds a on-hover tooltip displaying the parsed id and pass on the zoom button.
 function generateButton(buttonInformation) {
     let divElement = document.createElement("div");
 
@@ -113,7 +118,19 @@ function generateButton(buttonInformation) {
     zoombtn.innerHTML = "Zoom: " + buttonInformation;
     zoombtn.setAttribute("type", "button");
     zoombtn.addEventListener("click", () => connectToZoom(buttonInformation));
-    zoombtn.className = 'zoomButton';
+    zoombtn.className = 'zoomButton tooltip';
+
+    let tooltipSpan = document.createElement("SPAN");
+    const {id, pass} = parseIdAndPass(buttonInformation);
+    let tooltipPasswordP = document.createElement("p");
+    let tooltipIdP = document.createElement("p");
+    tooltipPasswordP.innerHTML = `Id: \"${id}\"`;
+    tooltipIdP.innerHTML = `Password: \"${pass}\"`;
+    tooltipSpan.className = 'tooltiptext';
+    
+    tooltipSpan.appendChild(tooltipPasswordP);
+    tooltipSpan.appendChild(tooltipIdP);
+    zoombtn.appendChild(tooltipSpan);
 
     divElement.appendChild(namebtn);
     divElement.appendChild(zoombtn);
@@ -121,8 +138,8 @@ function generateButton(buttonInformation) {
     return divElement;
 }
 
-//Button function to attempt to parse name and join a Zoom call
-function connectToZoom(text) {
+//Function to attempt to parse name and password
+function parseIdAndPass(text) {
     let id, pass;
     //Parse attempt #1: Only zoom id, no password
     if (text.replace(/ /g, "").length < 12) {
@@ -130,25 +147,34 @@ function connectToZoom(text) {
         pass = "";
     }
     // Parse attempt #2: Zoom id & password separated by a symbol.
-    else if ((/[-+:;_.,|/]/g).test(text)){
+    else if ((/[-+:;_.,|/]/g).test(text)) {
         text = text.replace(/ /g, ""); //Removes all white-spaces
         let index = text.search(/[-+:;_.,|/]/g);
         id = text.substring(0, index);
         pass = text.substring(index + 1, text.length);
     }
     // Parse attempt #3: First 11 decimals: Zoom id, anything after: password
-    else if ((/[0-9]{11}/g).test(text)){
+    else if ((/[0-9]{11}/g).test(text)) {
         text = text.replace(/ /g, ""); //Removes all white-spaces
         id = text.match(/[0-9]{11}/g);
         pass = text.replace(id, "");
     }
     // Last parse attempt #4: First 10 decimals: Zoom id, anything after: password
-    else if ((/[0-9]{10}/g).test(text)){
+    else if ((/[0-9]{10}/g).test(text)) {
         text = text.replace(/ /g, ""); //Removes all white-spaces
         id = text.match(/[0-9]{10}/g);
         pass = text.replace(id, "");
     }
 
+    return {
+        id,
+        pass
+    }
+}
+
+// Function for joining a zoom call with the password copied to clipboard.
+function connectToZoom(text) {
+    const {id, pass} = parseIdAndPass(text)
     setClipboard(pass);
     window.open(`https://zoom.us/j/${id}?pwd=${pass}`, "zoomWindow");
 }
