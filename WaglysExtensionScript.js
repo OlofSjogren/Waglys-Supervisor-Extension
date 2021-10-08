@@ -66,12 +66,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 let targetElement = document.getElementById("manageHelpListForm");
 const config = { attributes: false, childList: true, subtree: true };
 
-// Create an observer instance linked to the onWaglysUpdate function.
 const observer = new MutationObserver(onWaglysUpdate);
-
-// Start observing the help-list for mutations.
-// A mutation will occur every time Waglys makes a GET request to the server to update the help-list.
-// Waglys makes GET requests to the server in 10 second intervals.
 observer.observe(targetElement, config);
 
 //Force-update the first time page is loaded.
@@ -93,11 +88,10 @@ function onWaglysUpdate() {
         newNamesOnHelpList.push(zoomText);
     }
 
-    //Play audio if a the list of new names has any new names that the old one does not.
     if (newDifferentFromOld(oldNamesOnHelpList, newNamesOnHelpList)) {
         audio.play();
-
     }
+
     oldNamesOnHelpList = newNamesOnHelpList;
 
     observer.observe(targetElement, config);
@@ -172,7 +166,6 @@ function parseIdAndPass(text) {
     }
 }
 
-// Function for joining a zoom call with the password copied to clipboard.
 function connectToZoom(text) {
     const {id, pass} = parseIdAndPass(text)
     setClipboard(pass);
