@@ -4,8 +4,8 @@ let oldNamesOnHelpList = [];
 
 // Just makes the button pretty without needing a CSS-file
 // Button credit: https://www.bestcssbuttongenerator.com/
-let buttonStyle = document.createElement('style');
-buttonStyle.innerHTML = `.button {
+let style = document.createElement('style');
+style.innerHTML = `.button {
         box-shadow:inset 0px 1px 0px 0px #97c4fe;
         background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
         background-color:#3d94f6;
@@ -38,12 +38,29 @@ buttonStyle.innerHTML = `.button {
     .zoomButton:hover {
         background:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
         background-color:#378de5;
+    }
+    
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        background-color: rgba(0, 0, 0, .6);
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        top: -5px;
+        left: 105%;
+    }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
     }`;
-document.getElementsByTagName('head')[0].appendChild(buttonStyle);
-
-let styleTooltip = document.createElement('style');
-styleTooltip.innerHTML = '.tooltip {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-bottom: 1px dotted black;\r\n}\r\n\r\n.tooltip .tooltiptext {\r\n  visibility: hidden;\r\n background-color: rgba(0, 0, 0, .6);\r\n color: #fff;\r\n  text-align: center;\r\n  border-radius: 6px;\r\n  padding: 10px;\r\n\r\n  \/* Position the tooltip *\/\r\n  position: absolute;\r\n  z-index: 1;\r\n top: -5px;\r\n left: 105%;\r\n}\r\n\r\n.tooltip:hover .tooltiptext {\r\n  visibility: visible;\r\n}';
-document.getElementsByTagName('head')[0].appendChild(styleTooltip);
+document.getElementsByTagName('head')[0].appendChild(style);
 
 //Find the help-list element to add an observer later
 let targetElement = document.getElementById("manageHelpListForm");
