@@ -4,8 +4,8 @@ let oldNamesOnHelpList = [];
 
 // Just makes the button pretty without needing a CSS-file
 // Button credit: https://www.bestcssbuttongenerator.com/
-let styleName = document.createElement('style');
-styleName.innerHTML = `.nameButton {
+let buttonStyle = document.createElement('style');
+buttonStyle.innerHTML = `.button {
         box-shadow:inset 0px 1px 0px 0px #97c4fe;
         background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
         background-color:#3d94f6;
@@ -21,41 +21,25 @@ styleName.innerHTML = `.nameButton {
         text-decoration:none;
         text-shadow:0px 1px 0px #1570cd;
     }
-    .nameButton:hover {
+    .button:hover {
         background:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
         background-color:#1e62d0;
     }
-    .nameButton:active {
+    .button:active {
         position:relative;
         top:1px;
-    }`;
-document.getElementsByTagName('head')[0].appendChild(styleName);
-let styleZoom = document.createElement('style');
-styleZoom.innerHTML = `.zoomButton {
+    }
+    .zoom {
         box-shadow:inset 0px 1px 0px 0px #bbdaf7;
         background:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
         background-color:#79bbff;
-        border-radius:6px;
         border:1px solid #84bbf3;
-        display:inline-block;
-        cursor:pointer;
-        color:#ffffff;
-        font-family:Arial;
-        font-size:15px;
-        font-weight:bold;
-        padding:6px 24px;
-        text-decoration:none;
-        text-shadow:0px 1px 0px #528ecc;
     }
     .zoomButton:hover {
         background:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
         background-color:#378de5;
-    }
-    .zoomButton:active {
-        position:relative;
-        top:1px;
     }`;
-document.getElementsByTagName('head')[0].appendChild(styleZoom);
+document.getElementsByTagName('head')[0].appendChild(buttonStyle);
 
 let styleTooltip = document.createElement('style');
 styleTooltip.innerHTML = '.tooltip {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-bottom: 1px dotted black;\r\n}\r\n\r\n.tooltip .tooltiptext {\r\n  visibility: hidden;\r\n background-color: rgba(0, 0, 0, .6);\r\n color: #fff;\r\n  text-align: center;\r\n  border-radius: 6px;\r\n  padding: 10px;\r\n\r\n  \/* Position the tooltip *\/\r\n  position: absolute;\r\n  z-index: 1;\r\n top: -5px;\r\n left: 105%;\r\n}\r\n\r\n.tooltip:hover .tooltiptext {\r\n  visibility: visible;\r\n}';
@@ -113,13 +97,13 @@ function generateButton(buttonInformation) {
     namebtn.innerHTML = "Copy: " + buttonInformation;
     namebtn.setAttribute("type", "button");
     namebtn.addEventListener("click", () => setClipboard(buttonInformation));
-    namebtn.className = 'nameButton';
+    namebtn.className = 'button';
 
     let zoombtn = document.createElement("BUTTON");
     zoombtn.innerHTML = "Zoom: " + buttonInformation;
     zoombtn.setAttribute("type", "button");
     zoombtn.addEventListener("click", () => connectToZoom(buttonInformation));
-    zoombtn.className = 'zoomButton tooltip';
+    zoombtn.className = 'button zoom tooltip';
 
     let tooltipSpan = document.createElement("SPAN");
     const {id, pass} = parseIdAndPass(buttonInformation);
