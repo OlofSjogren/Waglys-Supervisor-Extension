@@ -100,6 +100,8 @@ function onWaglysUpdate() {
 // Generates a div containing the name-button and zoom-button.
 // Also adds a on-hover tooltip displaying the parsed id and pass on the zoom button.
 function generateButton(buttonInformation) {
+    const {id, pass} = parseIdAndPass(buttonInformation);
+
     let divElement = document.createElement("div");
 
     let namebtn = document.createElement("BUTTON");
@@ -111,11 +113,10 @@ function generateButton(buttonInformation) {
     let zoombtn = document.createElement("BUTTON");
     zoombtn.innerHTML = "Zoom: " + buttonInformation;
     zoombtn.setAttribute("type", "button");
-    zoombtn.addEventListener("click", () => connectToZoom(buttonInformation));
+    zoombtn.addEventListener("click", () => connectToZoom(id, pass));
     zoombtn.className = 'button zoom tooltip';
 
     let tooltipSpan = document.createElement("SPAN");
-    const {id, pass} = parseIdAndPass(buttonInformation);
     let tooltipPasswordP = document.createElement("p");
     let tooltipIdP = document.createElement("p");
     tooltipPasswordP.innerHTML = `MeetingId: \"${id}\"`;
@@ -166,8 +167,7 @@ function parseIdAndPass(text) {
     }
 }
 
-function connectToZoom(text) {
-    const {id, pass} = parseIdAndPass(text)
+function connectToZoom(id, pass) {
     setClipboard(pass);
     window.open(`https://zoom.us/j/${id}?pwd=${pass}`, "zoomWindow");
 }
