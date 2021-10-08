@@ -5,55 +5,56 @@ let oldNamesOnHelpList = [];
 // Just makes the button pretty without needing a CSS-file
 // Button credit: https://www.bestcssbuttongenerator.com/
 let styleName = document.createElement('style');
-styleName.innerHTML = '.nameButton {\n' +
-    '\tbox-shadow:inset 0px 1px 0px 0px #97c4fe;\n' +
-    '\tbackground:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);\n' +
-    '\tbackground-color:#3d94f6;\n' +
-    '\tborder-radius:6px;\n' +
-    '\tborder:1px solid #337fed;\n' +
-    '\tdisplay:inline-block;\n' +
-    '\tcursor:pointer;\n' +
-    '\tcolor:#ffffff;\n' +
-    '\tfont-family:Arial;\n' +
-    '\tfont-size:15px;\n' +
-    '\tfont-weight:bold;\n' +
-    '\tpadding:6px 24px;\n' +
-    '\ttext-decoration:none;\n' +
-    '\ttext-shadow:0px 1px 0px #1570cd;\n' +
-    '}\n' +
-    '.nameButton:hover {\n' +
-    '\tbackground:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);\n' +
-    '\tbackground-color:#1e62d0;\n' +
-    '}\n' +
-    '.nameButton:active {\n' +
-    '\tposition:relative;\n' +
-    '\ttop:1px;\n';
+styleName.innerHTML = `.nameButton {
+        box-shadow:inset 0px 1px 0px 0px #97c4fe;
+        background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+        background-color:#3d94f6;
+        border-radius:6px;
+        border:1px solid #337fed;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #1570cd;
+    }
+    .nameButton:hover {
+        background:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+        background-color:#1e62d0;
+    }
+    .nameButton:active {
+        position:relative;
+        top:1px;
+    }`;
 document.getElementsByTagName('head')[0].appendChild(styleName);
 let styleZoom = document.createElement('style');
-styleZoom.innerHTML = '.zoomButton {\n' +
-    '\tbox-shadow:inset 0px 1px 0px 0px #bbdaf7;\n' +
-    '\tbackground:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);\n' +
-    '\tbackground-color:#79bbff;\n' +
-    '\tborder-radius:6px;\n' +
-    '\tborder:1px solid #84bbf3;\n' +
-    '\tdisplay:inline-block;\n' +
-    '\tcursor:pointer;\n' +
-    '\tcolor:#ffffff;\n' +
-    '\tfont-family:Arial;\n' +
-    '\tfont-size:15px;\n' +
-    '\tfont-weight:bold;\n' +
-    '\tpadding:6px 24px;\n' +
-    '\ttext-decoration:none;\n' +
-    '\ttext-shadow:0px 1px 0px #528ecc;\n' +
-    '}\n' +
-    '.zoomButton:hover {\n' +
-    '\tbackground:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);\n' +
-    '\tbackground-color:#378de5;\n' +
-    '}\n' +
-    '.zoomButton:active {\n' +
-    '\tposition:relative;\n' +
-    '\ttop:1px;\n' +
-    '}';
+styleZoom.innerHTML = `.zoomButton {
+        box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+        background:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+        background-color:#79bbff;
+        border-radius:6px;
+        border:1px solid #84bbf3;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #528ecc;
+    }
+    .zoomButton:hover {
+        background:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
+        background-color:#378de5;
+    }
+    .zoomButton:active {
+        position:relative;
+        top:1px;
+    }`;
 document.getElementsByTagName('head')[0].appendChild(styleZoom);
 
 let styleTooltip = document.createElement('style');
