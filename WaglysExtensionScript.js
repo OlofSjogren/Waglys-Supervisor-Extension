@@ -64,7 +64,6 @@ onWaglysUpdate()
 // This function is called upon every time Waglys re-renders the list to inject buttons for every list-item.
 function onWaglysUpdate() {
     observer.disconnect();
-    //console.log("DISCONNECT OBSERVER")
 
     let newNamesOnHelpList = [];
 
@@ -80,12 +79,11 @@ function onWaglysUpdate() {
     //Play audio if a the list of new names has any new names that the old one does not.
     if (newDifferentFromOld(oldNamesOnHelpList, newNamesOnHelpList)) {
         audio.play();
-        //console.log("AUDIO SHOULD PLAY");
+
     }
     oldNamesOnHelpList = newNamesOnHelpList;
 
     observer.observe(targetElement, config);
-    //console.log("CONNECT OBSERVER")
 }
 
 // Generates a div containing the name-button and zoom-button.
