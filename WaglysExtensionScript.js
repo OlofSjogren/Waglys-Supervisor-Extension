@@ -4,72 +4,69 @@ let oldNamesOnHelpList = [];
 
 // Just makes the button pretty without needing a CSS-file
 // Button credit: https://www.bestcssbuttongenerator.com/
-let styleName = document.createElement('style');
-styleName.innerHTML = '.nameButton {\n' +
-    '\tbox-shadow:inset 0px 1px 0px 0px #97c4fe;\n' +
-    '\tbackground:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);\n' +
-    '\tbackground-color:#3d94f6;\n' +
-    '\tborder-radius:6px;\n' +
-    '\tborder:1px solid #337fed;\n' +
-    '\tdisplay:inline-block;\n' +
-    '\tcursor:pointer;\n' +
-    '\tcolor:#ffffff;\n' +
-    '\tfont-family:Arial;\n' +
-    '\tfont-size:15px;\n' +
-    '\tfont-weight:bold;\n' +
-    '\tpadding:6px 24px;\n' +
-    '\ttext-decoration:none;\n' +
-    '\ttext-shadow:0px 1px 0px #1570cd;\n' +
-    '}\n' +
-    '.nameButton:hover {\n' +
-    '\tbackground:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);\n' +
-    '\tbackground-color:#1e62d0;\n' +
-    '}\n' +
-    '.nameButton:active {\n' +
-    '\tposition:relative;\n' +
-    '\ttop:1px;\n';
-document.getElementsByTagName('head')[0].appendChild(styleName);
-let styleZoom = document.createElement('style');
-styleZoom.innerHTML = '.zoomButton {\n' +
-    '\tbox-shadow:inset 0px 1px 0px 0px #bbdaf7;\n' +
-    '\tbackground:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);\n' +
-    '\tbackground-color:#79bbff;\n' +
-    '\tborder-radius:6px;\n' +
-    '\tborder:1px solid #84bbf3;\n' +
-    '\tdisplay:inline-block;\n' +
-    '\tcursor:pointer;\n' +
-    '\tcolor:#ffffff;\n' +
-    '\tfont-family:Arial;\n' +
-    '\tfont-size:15px;\n' +
-    '\tfont-weight:bold;\n' +
-    '\tpadding:6px 24px;\n' +
-    '\ttext-decoration:none;\n' +
-    '\ttext-shadow:0px 1px 0px #528ecc;\n' +
-    '}\n' +
-    '.zoomButton:hover {\n' +
-    '\tbackground:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);\n' +
-    '\tbackground-color:#378de5;\n' +
-    '}\n' +
-    '.zoomButton:active {\n' +
-    '\tposition:relative;\n' +
-    '\ttop:1px;\n' +
-    '}';
-document.getElementsByTagName('head')[0].appendChild(styleZoom);
-
-let styleTooltip = document.createElement('style');
-styleTooltip.innerHTML = '.tooltip {\r\n  position: relative;\r\n  display: inline-block;\r\n  border-bottom: 1px dotted black;\r\n}\r\n\r\n.tooltip .tooltiptext {\r\n  visibility: hidden;\r\n background-color: rgba(0, 0, 0, .6);\r\n color: #fff;\r\n  text-align: center;\r\n  border-radius: 6px;\r\n  padding: 10px;\r\n\r\n  \/* Position the tooltip *\/\r\n  position: absolute;\r\n  z-index: 1;\r\n top: -5px;\r\n left: 105%;\r\n}\r\n\r\n.tooltip:hover .tooltiptext {\r\n  visibility: visible;\r\n}';
-document.getElementsByTagName('head')[0].appendChild(styleTooltip);
+let style = document.createElement('style');
+style.innerHTML = `.button {
+        box-shadow:inset 0px 1px 0px 0px #97c4fe;
+        background:linear-gradient(to bottom, #3d94f6 5%, #1e62d0 100%);
+        background-color:#3d94f6;
+        border-radius:6px;
+        border:1px solid #337fed;
+        display:inline-block;
+        cursor:pointer;
+        color:#ffffff;
+        font-family:Arial;
+        font-size:15px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:0px 1px 0px #1570cd;
+    }
+    .button:hover {
+        background:linear-gradient(to bottom, #1e62d0 5%, #3d94f6 100%);
+        background-color:#1e62d0;
+    }
+    .button:active {
+        position:relative;
+        top:1px;
+    }
+    .zoom {
+        box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+        background:linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+        background-color:#79bbff;
+        border:1px solid #84bbf3;
+    }
+    .zoomButton:hover {
+        background:linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
+        background-color:#378de5;
+    }
+    
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        background-color: rgba(0, 0, 0, .6);
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        top: -5px;
+        left: 105%;
+    }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+    }`;
+document.getElementsByTagName('head')[0].appendChild(style);
 
 //Find the help-list element to add an observer later
 let targetElement = document.getElementById("manageHelpListForm");
 const config = { attributes: false, childList: true, subtree: true };
 
-// Create an observer instance linked to the onWaglysUpdate function.
 const observer = new MutationObserver(onWaglysUpdate);
-
-// Start observing the help-list for mutations.
-// A mutation will occur every time Waglys makes a GET request to the server to update the help-list.
-// Waglys makes GET requests to the server in 10 second intervals.
 observer.observe(targetElement, config);
 
 //Force-update the first time page is loaded.
@@ -79,7 +76,6 @@ onWaglysUpdate()
 // This function is called upon every time Waglys re-renders the list to inject buttons for every list-item.
 function onWaglysUpdate() {
     observer.disconnect();
-    //console.log("DISCONNECT OBSERVER")
 
     let newNamesOnHelpList = [];
 
@@ -92,36 +88,35 @@ function onWaglysUpdate() {
         newNamesOnHelpList.push(zoomText);
     }
 
-    //Play audio if a the list of new names has any new names that the old one does not.
     if (newDifferentFromOld(oldNamesOnHelpList, newNamesOnHelpList)) {
         audio.play();
-        //console.log("AUDIO SHOULD PLAY");
     }
+
     oldNamesOnHelpList = newNamesOnHelpList;
 
     observer.observe(targetElement, config);
-    //console.log("CONNECT OBSERVER")
 }
 
 // Generates a div containing the name-button and zoom-button.
 // Also adds a on-hover tooltip displaying the parsed id and pass on the zoom button.
 function generateButton(buttonInformation) {
+    const {id, pass} = parseIdAndPass(buttonInformation);
+
     let divElement = document.createElement("div");
 
     let namebtn = document.createElement("BUTTON");
     namebtn.innerHTML = "Copy: " + buttonInformation;
     namebtn.setAttribute("type", "button");
     namebtn.addEventListener("click", () => setClipboard(buttonInformation));
-    namebtn.className = 'nameButton';
+    namebtn.className = 'button';
 
     let zoombtn = document.createElement("BUTTON");
     zoombtn.innerHTML = "Zoom: " + buttonInformation;
     zoombtn.setAttribute("type", "button");
-    zoombtn.addEventListener("click", () => connectToZoom(buttonInformation));
-    zoombtn.className = 'zoomButton tooltip';
+    zoombtn.addEventListener("click", () => connectToZoom(id, pass));
+    zoombtn.className = 'button zoom tooltip';
 
     let tooltipSpan = document.createElement("SPAN");
-    const {id, pass} = parseIdAndPass(buttonInformation);
     let tooltipPasswordP = document.createElement("p");
     let tooltipIdP = document.createElement("p");
     tooltipPasswordP.innerHTML = `MeetingId: \"${id}\"`;
@@ -172,9 +167,7 @@ function parseIdAndPass(text) {
     }
 }
 
-// Function for joining a zoom call with the password copied to clipboard.
-function connectToZoom(text) {
-    const {id, pass} = parseIdAndPass(text)
+function connectToZoom(id, pass) {
     setClipboard(pass);
     window.open(`https://zoom.us/j/${id}?pwd=${pass}`, "zoomWindow");
 }
